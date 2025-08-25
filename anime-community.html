@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anime Community — Reviews & Blogs</title>
+  <style>
+    :root{
+      --bg:#0f1226;
+      --card:#181c3a;
+      --muted:#aab2ff;
+      --text:#eef0ff;
+      --chip:#2a2f5a;
+      --accent1:#ff6ec7;
+      --accent2:#7cf7ff;
+      --accent3:#ffd166;
+      --accent4:#8cff66;
+      --danger:#ff7675;
+      --ok:#66ffa8;
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text); background: radial-gradient(1200px 600px at 10% -10%, #281f74 0%, transparent 60%),
+                         radial-gradient(800px 400px at 110% 10%, #5e1568 0%, transparent 50%),
+                         linear-gradient(180deg, #0b0f24, #0f1226);
+    }
+    header{
+      background: conic-gradient(from 120deg at 30% 50%, var(--accent1), var(--accent2), var(--accent3), var(--accent4), var(--accent1));
+      padding: 28px 20px; position: sticky; top:0; z-index:20; box-shadow: var(--shadow);
+    }
+    .header-inner{max-width:1200px; margin:0 auto; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+    .brand{font-size: clamp(22px, 3vw, 34px); font-weight:800; letter-spacing:.5px; text-shadow:0 2px 16px rgba(0,0,0,.35)}
+    .brand small{display:block; font-size:12px; font-weight:600}
+
+    .search{flex:1 1 280px; position:relative}
+    .search input{width:100%; border:none; outline:none; padding:12px 14px 12px 42px; border-radius:14px; background:rgba(255,255,255,.12); color:var(--text); font-size:14px; backdrop-filter: blur(6px)}
+    .search .icon{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.75}
+
+    .wrap{max-width:1200px; margin:24px auto; padding:0 20px; display:grid; grid-template-columns: 260px 1fr; gap:20px}
+    @media (max-width: 900px){ .wrap{grid-template-columns: 1fr;}}
+
+    .sidebar{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px; box-shadow:var(--shadow)}
+    .sidebar h3{margin:6px 0 12px; font-size:14px; opacity:.9}
+    .chips{display:flex; flex-wrap:wrap; gap:10px}
+    .chip{background:var(--chip); color:var(--text); padding:8px 12px; border-radius:999px; font-size:12px; cursor:pointer; border:1px solid rgba(255,255,255,.08); transition:.2s transform, .2s background}
+    .chip:hover{transform: translateY(-2px)}
+    .chip.active{background:linear-gradient(90deg, var(--accent2), var(--accent1)); color:#0b0f24}
+
+    .content{display:grid; gap:16px}
+    .toolbar{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+    .toolbar select, .toolbar button{border:none; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.08); color:var(--text)}
+    .toolbar button.primary{background:linear-gradient(90deg, var(--accent1), var(--accent2)); color:#0b0f24; font-weight:700}
+
+    .grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:18px}
+    .card{background:var(--card); border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); display:flex; flex-direction:column}
+    .banner{height:140px; background: linear-gradient(120deg, rgba(255,110,199,.5), rgba(124,247,255,.5)),
+                            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%23ff6ec7"/><stop offset="100%" stop-color="%237cf7ff"/></linearGradient></defs><rect width="600" height="300" fill="url(%23g)"/></svg>') center/cover;}
+    .card-body{padding:14px 14px 6px}
+    .title{font-weight:800; letter-spacing:.3px}
+    .tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+    .tag{font-size:10px; padding:4px 8px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08)}
+    .rating{margin-top:8px; font-size:12px; opacity:.9}
+
+    details{border-top:1px dashed rgba(255,255,255,.1); margin-top:10px}
+    summary{cursor:pointer; list-style:none; padding:10px 2px; font-weight:700}
+    summary::-webkit-details-marker{display:none}
+
+    .list{display:flex; flex-direction:column; gap:10px; margin-bottom:10px}
+    .item{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:10px}
+    .item h5{margin:0 0 6px; font-size:13px}
+    .item p{margin:0; font-size:13px; opacity:.95; line-height:1.4}
+    .muted{font-size:12px; opacity:.75}
+
+    form{display:grid; gap:8px; margin:10px 0}
+    input, textarea, select{width:100%; border:none; border-radius:12px; padding:10px 12px; background:rgba(255,255,255,.08); color:var(--text)}
+    textarea{min-height:80px; resize:vertical}
+    .actions{display:flex; gap:8px; justify-content:flex-end}
+    .btn{border:none; cursor:pointer; border-radius:12px; padding:10px 12px}
+    .btn.primary{background:linear-gradient(90deg, var(--accent3), var(--accent4)); color:#0b0f24; font-weight:800}
+    .btn.ghost{background:rgba(255,255,255,.08); color:var(--text)}
+    .danger{color:var(--danger); cursor:pointer}
+
+    .footer{opacity:.7; text-align:center; padding:24px}
+    .pill{display:inline-block; padding:6px 10px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); border-radius:999px; font-size:12px}
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{height:10px; width:10px}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(180deg, #6b5cff, #ff6ec7); border-radius:999px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">Anime Community <small>Colorful hub for reviews & blogs</small></div>
+      <div class="search">
+        <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input id="searchInput" placeholder="Search animations by title…" />
+      </div>
+      <div class="toolbar">
+        <select id="sortSelect" title="Sort">
+          <option value="title">Sort: Title (A–Z)</option>
+          <option value="rating">Sort: Highest Rated</option>
+          <option value="recent">Sort: Most Recent Activity</option>
+        </select>
+        <button class="primary" id="exportBtn" title="Export your community data">Export Data</button>
+        <button id="importBtn" title="Import a previously exported JSON file">Import Data</button>
+        <input id="fileInput" type="file" accept="application/json" style="display:none" />
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <aside class="sidebar">
+      <h3>All Animation Categories</h3>
+      <div id="categoryChips" class="chips"></div>
+    </aside>
+
+    <main class="content">
+      <div class="grid" id="cards"></div>
+      <div class="footer">
+        <span class="pill">Your reviews & blogs are stored locally in your browser (no server required).</span>
+      </div>
+    </main>
+  </div>
+
+  <template id="cardTemplate">
+    <article class="card" data-id="">
+      <div class="banner"></div>
+      <div class="card-body">
+        <div class="title"></div>
+        <div class="tags"></div>
+        <div class="rating">⭐ <span class="avg">0.0</span> • <span class="count">0</span> reviews</div>
+
+        <details>
+          <summary>Reviews</summary>
+          <div class="list reviews"></div>
+          <form class="reviewForm">
+            <div style="display:grid; grid-template-columns:1fr 120px; gap:8px">
+              <input name="name" placeholder="Your name" required />
+              <select name="rating">
+                <option value="5">5 — Masterpiece</option>
+                <option value="4">4 — Great</option>
+                <option value="3">3 — Good</option>
+                <option value="2">2 — Meh</option>
+                <option value="1">1 — Skip</option>
+              </select>
+            </div>
+            <textarea name="comment" placeholder="Share your thoughts…" required></textarea>
+            <div class="actions">
+              <button type="reset" class="btn ghost">Clear</button>
+              <button type="submit" class="btn primary">Post Review</button>
+            </div>
+          </form>
+        </details>
+
+        <details>
+          <summary>Blogs</summary>
+          <div class="list blogs"></div>
+          <form class="blogForm">
+            <input name="title" placeholder="Blog title" required />
+            <div style="display:grid; grid-template-columns:1fr 180px; gap:8px">
+              <textarea name="content" placeholder="Write your blog post…" required></textarea>
+              <div style="display:grid; gap:8px">
+                <input name="author" placeholder="Author" required />
+                <button type="submit" class="btn primary">Publish Blog</button>
+                <button type="reset" class="btn ghost">Reset</button>
+              </div>
+            </div>
+          </form>
+        </details>
+
+      </div>
+    </article>
+  </template>
+
+  <script>
+    // ---- Data & Persistence ----
+    const CATEGORIES = [
+      "Action", "Adventure", "Romance", "Slice of Life", "Comedy", "Drama",
+      "Fantasy", "Sci‑Fi", "Sports", "Horror", "Mystery", "Mecha", "Isekai",
+      "Historical", "Supernatural"
+    ];
+
+    const DEFAULT_ANIME = [
+      { id: "aot", title: "Attack on Titan", categories:["Action","Drama","Mystery"], bannerHue: 12 },
+      { id: "demon-slayer", title: "Demon Slayer", categories:["Action","Adventure","Supernatural"], bannerHue: 330 },
+      { id: "your-name", title: "Your Name", categories:["Romance","Drama","Fantasy"], bannerHue: 200 },
+      { id: "haikyuu", title: "Haikyuu!!", categories:["Sports","Comedy","Drama"], bannerHue: 45 },
+      { id: "spyxfamily", title: "SPY×FAMILY", categories:["Comedy","Slice of Life","Action"], bannerHue: 150 },
+      { id: "one-piece", title: "One Piece", categories:["Adventure","Action","Fantasy"], bannerHue: 260 },
+      { id: "violet-evergarden", title: "Violet Evergarden", categories:["Drama","Slice of Life"], bannerHue: 280 },
+      { id: "mushoku-tensei", title: "Mushoku Tensei", categories:["Isekai","Fantasy","Drama"], bannerHue: 320 },
+      { id: "made-in-abyss", title: "Made in Abyss", categories:["Adventure","Mystery","Fantasy"], bannerHue: 20 },
+      { id: "steins-gate", title: "Steins;Gate", categories:["Sci‑Fi","Mystery","Drama"], bannerHue: 200 }
+    ];
+
+    const LS_KEY = "animeCommunityData:v1";
+
+    function loadData(){
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw){
+        // Seed structure
+        const seed = Object.fromEntries(DEFAULT_ANIME.map(a=>[a.id, { ...a, reviews:[], blogs:[], updated: Date.now() } ]));
+        localStorage.setItem(LS_KEY, JSON.stringify(seed));
+        return seed;
+      }
+      try{ return JSON.parse(raw); }catch(e){ console.warn("Failed to parse data, resetting.", e); localStorage.removeItem(LS_KEY); return loadData(); }
+    }
+
+    function saveData(db){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+
+    let DB = loadData();
+
+    // ---- UI Rendering ----
+    const cardsEl = document.getElementById('cards');
+    const cardTpl = document.getElementById('cardTemplate');
+    const categoryChips = document.getElementById('categoryChips');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    let activeCategory = 'All';
+
+    function chip(label){
+      const el = document.createElement('button');
+      el.className = 'chip'; el.textContent = label; el.dataset.label = label;
+      el.addEventListener('click', ()=>{ activeCategory = label; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); render(); });
+      return el;
+    }
+
+    function buildChips(){
+      categoryChips.innerHTML = '';
+      const all = chip('All'); all.classList.add('active'); categoryChips.appendChild(all);
+      CATEGORIES.forEach(c=> categoryChips.appendChild(chip(c)));
+    }
+
+    function animeArray(){ return Object.values(DB); }
+
+    function computeAvg(arr){ if(!arr || !arr.length) return 0; return +(arr.reduce((a,b)=>a+Number(b.rating||0),0)/arr.length).toFixed(2); }
+
+    function render(){
+      const q = (searchInput.value||'').toLowerCase().trim();
+      let list = animeArray().filter(a => activeCategory==='All' || a.categories.includes(activeCategory));
+      if(q) list = list.filter(a => a.title.toLowerCase().includes(q));
+
+      const sort = sortSelect.value;
+      if(sort==='title') list.sort((a,b)=> a.title.localeCompare(b.title));
+      if(sort==='rating') list.sort((a,b)=> computeAvg(b.reviews) - computeAvg(a.reviews));
+      if(sort==='recent') list.sort((a,b)=> (b.updated||0) - (a.updated||0));
+
+      cardsEl.innerHTML = '';
+      list.forEach(anime => cardsEl.appendChild(buildCard(anime)));
+    }
+
+    function buildCard(anime){
+      const node = cardTpl.content.firstElementChild.cloneNode(true);
+      node.dataset.id = anime.id;
+      const banner = node.querySelector('.banner');
+      banner.style.background = `linear-gradient(120deg, hsla(${anime.bannerHue},100%,70%,.55), hsla(${(anime.bannerHue+80)%360},100%,70%,.55))`;
+
+      node.querySelector('.title').textContent = anime.title;
+      const tags = node.querySelector('.tags'); tags.textContent='';
+      anime.categories.forEach(c=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=c; tags.appendChild(s);});
+
+      // Rating
+      const avg = computeAvg(anime.reviews);
+      node.querySelector('.avg').textContent = avg.toFixed(2);
+      node.querySelector('.count').textContent = anime.reviews.length;
+
+      // Reviews list
+      const reviewsList = node.querySelector('.reviews');
+      anime.reviews.forEach((r,i)=> reviewsList.appendChild(reviewItem(anime.id, r, i)));
+
+      // Blogs list
+      const blogsList = node.querySelector('.blogs');
+      anime.blogs.forEach((b,i)=> blogsList.appendChild(blogItem(anime.id, b, i)));
+
+      // Review form handler
+      node.querySelector('.reviewForm').addEventListener('submit', (e)=>{
+        e.preventDefault(); const fd = new FormData(e.target);
+        const item = { name: (fd.get('name')||'Anonymous').toString().slice(0,48), rating: Number(fd.get('rating')||0), comment: (fd.get('comment')||'').toString().slice(0,800), ts: Date.now() };
+        DB[anime.id].reviews.push(item); DB[anime.id].updated = Date.now(); saveData(DB); render();
+        e.target.reset();
+      });
+
+      // Blog form handler
+      node.querySelector('.blogForm').addEventListener('submit', (e)=>{
+        e.preventDefault(); const fd = new FormData(e.target);
+        const item = { title: (fd.get('title')||'Untitled').toString().slice(0,120), content: (fd.get('content')||'').toString().slice(0,5000), author: (fd.get('author')||'Anonymous').toString().slice(0,48), ts: Date.now() };
+        DB[anime.id].blogs.unshift(item); DB[anime.id].updated = Date.now(); saveData(DB); render();
+        e.target.reset();
+      });
+
+      return node;
+    }
+
+    function reviewItem(aid, r, idx){
+      const wrap = document.createElement('div'); wrap.className='item';
+      const h = document.createElement('h5'); h.textContent = `${r.name} · ${'⭐'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}`;
+      const p = document.createElement('p'); p.textContent = r.comment;
+      const meta = document.createElement('div'); meta.className='muted'; meta.textContent = new Date(r.ts).toLocaleString();
+      const del = document.createElement('div'); del.className='danger muted'; del.textContent='Delete'; del.style.float='right'; del.style.marginTop='-18px'; del.style.cursor='pointer';
+      del.onclick = ()=>{ if(confirm('Delete this review?')){ DB[aid].reviews.splice(idx,1); DB[aid].updated = Date.now(); saveData(DB); render(); } };
+      wrap.append(h,p,meta,del); return wrap;
+    }
+
+    function blogItem(aid, b, idx){
+      const wrap = document.createElement('div'); wrap.className='item';
+      const h = document.createElement('h5'); h.textContent = b.title;
+      const p = document.createElement('p'); p.textContent = b.content;
+      const meta = document.createElement('div'); meta.className='muted'; meta.textContent = `${b.author} • ${new Date(b.ts).toLocaleString()}`;
+      const del = document.createElement('div'); del.className='danger muted'; del.textContent='Delete'; del.style.float='right'; del.style.marginTop='-18px'; del.style.cursor='pointer';
+      del.onclick = ()=>{ if(confirm('Delete this blog post?')){ DB[aid].blogs.splice(idx,1); DB[aid].updated = Date.now(); saveData(DB); render(); } };
+      wrap.append(h,p,meta,del); return wrap;
+    }
+
+    // Export / Import
+    exportBtn.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(DB,null,2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'anime-community-data.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    importBtn.addEventListener('click', ()=> fileInput.click());
+    fileInput.addEventListener('change', (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const reader = new FileReader(); reader.onload = ()=>{
+        try{
+          const data = JSON.parse(reader.result);
+          // Basic validation
+          if(typeof data === 'object' && Object.keys(data).length){ DB = data; saveData(DB); render(); }
+          else alert('Invalid data file.');
+        }catch(err){ alert('Failed to import: ' + err.message); }
+      }; reader.readAsText(file);
+    });
+
+    // Listeners
+    searchInput.addEventListener('input', render);
+    sortSelect.addEventListener('change', render);
+
+    // Init
+    buildChips();
+    render();
+  </script>
+</body>
+</html>
